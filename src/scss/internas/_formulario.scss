@@ -1,0 +1,57 @@
+.formulario {
+    .grupo {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2rem;
+    }
+
+    .contacto {
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 25rem;
+    }
+    p {
+        font-size: 1.8rem;
+        color: $grisOscuro;
+        margin-top: 0;
+    }
+
+    fieldset {
+        padding: 2rem;
+        border-radius: .7rem;
+        border: .1rem solid lighten($grisOscuro, 40);
+    }
+
+    legend {
+        color: $grisOscuro;
+        font-size: 1.6rem;
+    }
+
+    input:not([type="submit"]),
+    textarea,
+    select {
+        padding: 1rem;
+        border-radius: 1rem;
+        display: block;
+        border: .1rem solid lighten($grisOscuro, 40);
+        border-radius: .7rem;
+    }
+
+    label {
+        font-size: 2rem;
+        color: $grisOscuro;
+        font-weight: $bold;
+    }
+
+    input[type="submit"] {
+        @include boton ($verde, block);
+        width: 100%;
+        
+        @include tablet {
+            @include boton ($verde, inline-block);
+            width: auto;
+        }
+    }
+
+
+}

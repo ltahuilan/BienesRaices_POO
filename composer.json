@@ -1,0 +1,17 @@
+{
+    "name": "tahuilan/bienes-raices-poo",
+    "description": "Proyecto con PHP y POO",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Luis Tahuilan",
+            "email": "ltahuilan.ipn@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload" : {
+        "psr-4": {
+            "App\\" : "./classes"
+        }
+    }
+}
