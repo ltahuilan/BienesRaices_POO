@@ -1,18 +1,9 @@
 <?php
+
     require '../includes/app.php';
 
-    $auth = autenticado();
 
-    if (!$auth) {
-        header('location: /');
-    }
-
-
-    // echo '<pre>';
-    // var_dump($_SERVER);
-    // echo '</pre>';
-    // exit;
-
+    autenticado();
 
     /**===COMPROBAR EL QUERY STRING=== */
     $queryString = '';
@@ -58,7 +49,7 @@
             $imgNombre = mysqli_fetch_assoc($resultado);
             var_dump($imgNombre['imagen']);
 
-            unlink('../upload_img/' . $imgNombre['imagen']);
+            unlink('../uploads/' . $imgNombre['imagen']);
 
             //Elima el registro de la DB
             $query = "DELETE FROM propiedades WHERE id = ${id}";
@@ -113,7 +104,7 @@
                 <td><?php echo $propiedad['id']; ?></td>
                 <td><?php echo $propiedad['titulo']; ?></td>
                 <td>$<?php echo $propiedad['precio']; ?> </td>
-                <td class="imagen-propiedad"><img src="/upload_img/<?php echo $propiedad['imagen']; ?>" alt="imagen propiedad"></td>
+                <td class="imagen-propiedad"><img src="/uploads/<?php echo $propiedad['imagen']; ?>" alt="imagen propiedad"></td>
                 <td><?php echo $propiedad['descripcion']; ?></td>
                 <?php 
                     //PASO 2: Realizar el query

@@ -1,11 +1,7 @@
 <?php
     require '../../includes/app.php';
 
-    $auth = autenticado();
-
-    if (!$auth) {
-        header('location: /');
-    }
+    autenticado();
 
 
     //validar id de propiedad
@@ -23,10 +19,7 @@
     $queryPropiedades = mysqli_query($db, "SELECT * FROM propiedades WHERE id = ${id}");
     $propiedad = mysqli_fetch_assoc($queryPropiedades);
 
-    // echo "<pre>";
-    // var_dump($propiedad);
-    // echo "</pre>";
-    // exit;
+
    
     //consulta para obtener los registros de vendedores
     $queryVendedores = mysqli_query($db, "SELECT * FROM vendedores");

@@ -2,29 +2,21 @@
 
     require '../../includes/app.php'; 
 
-    $auth = autenticado();
+    use App\Propiedad;
+    use Intervention\Image\ImageManagerStatic as Image;
 
-    if (!$auth) {
-        header('location: /');
-    }
-
+    autenticado();
 
     //Importar la conexión
     $db = conectaDB();
-    // var_dump($db);
-
-    // echo "<pre>";
-    // var_dump($db);
-    // echo "</pre>";
-    // exit;
 
     //Realizar el query
-    $query = "SELECT * FROM vendedores";
+    $query = "SELECT * FROM vendedores"; 
 
     //Obtener los resultados
     $resultado = mysqli_query($db, $query);
 
-    $errores = [];
+    $errores = Propiedad::getErrores();
 
     $titulo = '';
     $precio = '';
@@ -37,106 +29,54 @@
     
     if($_SERVER["REQUEST_METHOD"] == 'POST') {
 
-        // echo "<pre>";
-        // var_dump($_POST);
-        // echo "</pre>";
-
-        // echo "<pre>";
-        // var_dump($_FILES);
-        // echo "</pre>";
-        // exit;
-
-        /**SANITIZAR ENTRADA DE DATOS */
-        // $variable = 'correo@correo.com';
-        // $var_sani = filter_var($variable, FILTER_SANITIZE_EMAIL);
-        // var_dump($var_sani);
-
-        /**mysqli_real_escape_string previene la inyección de codigo malicioso
-         * por medio de un string.
-         * filter_var($var, FILTER_SANITIZE...) sanitiza la entrada de datos.
-         */
-        $titulo = filter_var( mysqli_real_escape_string( $db, $_POST['titulo'] ), FILTER_SANITIZE_STRING);
-        $precio = filter_var( mysqli_real_escape_string( $db, $_POST['precio'] ), FILTER_SANITIZE_NUMBER_INT);
-        $descripcion = filter_var( mysqli_real_escape_string( $db, $_POST['descripcion'] ), FILTER_SANITIZE_STRING);
-        $habitaciones = filter_var( mysqli_real_escape_string( $db, $_POST['habitaciones'] ), FILTER_SANITIZE_NUMBER_INT);
-        $wc = filter_var( mysqli_real_escape_string( $db, $_POST['wc'] ), FILTER_SANITIZE_NUMBER_INT);
-        $estacionamiento = filter_var( mysqli_real_escape_string( $db, $_POST['estacionamiento'] ), FILTER_SANITIZE_NUMBER_INT);
-        $creado = date('Y/m/d');
-        $vendedorId = filter_var( mysqli_real_escape_string( $db, $_POST['vendedor'] ), FILTER_SANITIZE_NUMBER_INT);
-
-        /**Asignar archivo a la variable */
-        $imagen = $_FILES['imagen'];
-
-        // echo "<pre>";
-        // var_dump($_FILES);
-        // echo "</pre>";
-
+        //instanciar la clase
+        $propiedad = new Propiedad($_POST);
         
-        /**validar que los campos del formulario no estenvacíos */
-        if($titulo == '') {
-            $errores['err_titulo'] = 'El titulo no puede estar vacío';
-        }
-        if($precio == '') {
-            $errores['err_precio'] = 'Debes añadir un precio a la propiedad';
-        }
-        if(strlen($descripcion) < 30) {
-            $errores['err_descripcion'] = 'Falta una descripción o debe tener al menos 30 caracteres';
-        }
-        if($habitaciones == '') {
-            $errores['err_habitaciones'] = 'Indica el número de habitaciones';
-        }
-        if($wc == '') {
-            $errores['err_wc'] = 'Indica el número de baños';
-        }
-        if($estacionamiento == '') {
-            $errores['err_estacionamiento'] = 'Indica el número de estacionamientos';
-        }
-        /**Validación de imagen */
-        
-        if(!$imagen['name']) {
-            $errores['err_imagen'] = 'No se ha seleccionado una imagen';
-        }
-        /**validar por tamaño */
-        $size = 1024 * 1000; //1MB
-        if ($imagen['size'] > $size) {
-            $errores['err_img_size'] = 'La imagen no puede ser mayor a 50KB';
-        }
-        // echo "<pre>";
-        // var_dump($errores);
-        // echo "</pre>";
+        //obtner la conexion a la DB
+        $db = conectaDB();
 
-        /**----SUBIR ARCHIVOS----- */
+        //pasar la conexión hacia el metodo de clase
+        $propiedad->setDB($db);
 
+        /**ARCHIVOS */
+
+        //Asignar archivo a la variable
+        $imagen = $_FILES['imagen']['name'];        
+
+        //generar nombre unico
+        $nombreImg = uniqid(rand()) . $imagen;
+
+        //pasar el nombre de la imagen hacia la clase (modelo)
+        $propiedad->setImagen($nombreImg);
         
-        if(empty($errores)) {
-            //Crear una carpeta
-            $carpetaImagenes = '../../upload_img/';
-    
-            if (!is_dir($carpetaImagenes)) {
-                mkdir($carpetaImagenes);
-            }
-    
-            //generar nombre unico
-            $nombreImg = uniqid(rand()) . $imagen['name'];
-    
+        //validacion
+        $errores = $propiedad->validar();
+        
+        if(empty($errores)) { 
+
             
+        //verificar si el directorio para almacenar imagenes existe
+        if(!is_dir(DIR_IMAGENES)) {
+            mkdir(DIR_IMAGENES);
+        }
 
-            /**Inserta valores en la DB */
-            $insert_propiedad = "INSERT INTO propiedades (titulo, precio, imagen, descripcion, habitaciones, wc, estacionamiento, creado, vendedorId)
-            VALUES ('$titulo', '$precio', '$nombreImg', '$descripcion', '$habitaciones', '$wc', '$estacionamiento', '$creado', '$vendedorId')";
+            //setear la imagen
+            $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800, 600);
 
-            $resultado = mysqli_query($db, $insert_propiedad);
-            if($resultado) {
-                //subir archivo
-                move_uploaded_file($imagen['tmp_name'], $carpetaImagenes . $nombreImg);
-
+            //subir archivo
+            $image->save( DIR_IMAGENES . $nombreImg);
+            
+            //Guardar en la BASE DE DATOS
+            $resultado = $propiedad->guardar();
+            
+            if ($resultado) {
                 /**query string: permite pasar cualquier tipo de valor por medio de la url */
                 header('Location: /admin/index.php?resultado=1');
             }
+
         }
     }
 
-    // include '../../includes/templates/header.php';   
     incluirTemplates('header', $inicio = false, $admin = true);
 ?>
 
@@ -233,7 +173,7 @@
             <fieldset>
                 <legend>Vendedores</legend>
                 <div class="grupo">
-                    <select name="vendedor" >
+                    <select name="vendedorId" >
                         <option value="">-- Seleccionar --</option>
 
                         <?php while ($vendedor = mysqli_fetch_assoc($resultado)) : ?>

@@ -1,6 +1,9 @@
 document.addEventListener('DOMContentLoaded', function() {
+
     eventsListeners();
     darkMode();
+    removerAlerta();
+
 });
 
 function eventsListeners() {
@@ -27,9 +30,9 @@ function darkMode() {
     // console.log(prefiereDarkMode.matches);
 
     if(prefiereDarkMode.matches) {
-        document.body.classList.add('dark-mode');
+        // document.body.classList.add('dark-mode');
     }else{
-        document.body.classList.remove('dark-mode');
+        // document.body.classList.remove('dark-mode');
     }
 
     /**Escuchar los cambios de ajustes en el tema en las preferencias del sistema
@@ -37,9 +40,9 @@ function darkMode() {
      */
     prefiereDarkMode.addEventListener('change', function() {
         if(prefiereDarkMode.matches) {
-            document.body.classList.add('dark-mode');
+            // document.body.classList.add('dark-mode');
         }else{
-            document.body.classList.remove('dark-mode');
+            // document.body.classList.remove('dark-mode');
         }
     });
 
@@ -66,3 +69,12 @@ function darkMode() {
         document.body.classList.add('dark-mode');
     }
 };
+
+
+function removerAlerta() {
+    const alerta = document.querySelector('.correcto');
+
+    setTimeout(() => {
+        alerta.remove();
+    }, 3500);
+}
