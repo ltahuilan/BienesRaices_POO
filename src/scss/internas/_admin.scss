@@ -1,6 +1,5 @@
 
 .alerta {
-    color: $blanco;
     padding: .7rem;
     text-align: center;
     text-transform: uppercase;
@@ -9,11 +8,15 @@
     border-radius: .5rem;
     
     &.error {
-        background-color: $rojo;
+        background-color: lighten($rojo, 35);
+        color: $rojo;
+        border: .1rem solid $rojo;
     }
     
     &.correcto {
-        background-color: $verde;
+        background-color: lighten($verdeCorrecto, 40);
+        color: $verdeCorrecto;
+        border: .1rem solid $verdeCorrecto;
     }
 
 }

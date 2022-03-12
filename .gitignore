@@ -4,4 +4,5 @@ node_modules/
 #descartar carpeta vendor de composer
 vendor/
 
-#upload_img/
+#uploads/
+uploads/

@@ -21,3 +21,8 @@ function debuguear($var) {
     echo "</pre>";
     exit;
 }
+
+function sntzr($html) : string {
+    $string = htmlspecialchars($html);
+    return $string;
+}

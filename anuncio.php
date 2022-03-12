@@ -51,7 +51,7 @@
             <picture>
                 <!-- <source srcset="build/img/destacada.webp" type="image/webp">
                 <source srcset="build/img/destacada.jpg" type="image/jpeg"> -->
-                <img loading="lazy" src="/upload_img/<?php echo $propiedad['imagen']; ?>" alt="Imagen destacada">
+                <img loading="lazy" src="/uploads/<?php echo $propiedad['imagen']; ?>" alt="Imagen destacada">
             </piture>
     
             <div class="contenido-anuncio">

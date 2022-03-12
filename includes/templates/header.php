@@ -40,11 +40,14 @@
                         <a href="/anuncios.php">Anuncios</a>
                         <a href="/blog.php">Blog</a>
                         <a href="/contacto.php">Contacto</a>
-                        <?php if($auth) : ?>
-                            <a href="/logout.php" class="sesion">Cerrar Sesión</a>
-                        <?php else :?>    
-                            <a href="/login.php" class="sesion">Login</a>
-                        <?php endif; ?>
+                        <div class="admin">
+                            <?php if($auth) : ?>
+                                <a href="/admin" class="sesion">Administrar 
+                                <a href="/logout.php" class="sesion">Salir</a>
+                            <?php else :?>    
+                                <a href="/login.php" class="sesion">Login</a>
+                            <?php endif; ?>
+                        </div>
                     </nav>
                 </div>
             </div><!--.barra-->

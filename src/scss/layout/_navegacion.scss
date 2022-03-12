@@ -37,15 +37,6 @@
         display: block;
         text-align: center;
 
-        // &::after {
-        //     content: '';
-        //     height: .3rem;
-        //     width: 100%;
-        //     background-color: $verde;
-        //     visibility: hidden;
-        //     display: block;
-        // }
-
         &:hover {
             color: $verde;
         }
@@ -67,6 +58,18 @@
         height: auto;
         @include tablet {
             flex-direction: row;
+        }
+    }
+    
+    .admin {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1rem 0 3rem;
+        
+        a{
+            margin: 0;
         }
     }
     
