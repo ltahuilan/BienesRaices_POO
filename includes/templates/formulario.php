@@ -75,10 +75,20 @@
 <fieldset>
     <legend>Vendedores</legend>
     <div class="grupo">
+
+        <label for="vendedor">Vendedor:</label>
+
         <select name="vendedorId" >
-            <option value="1">-- Seleccionar --</option>
-
-
+            <option selected value="<?php echo sntzr($propiedad->vendedorId)?>">-- Seleccionar --</option>
+            
+            <?php foreach($vendedores as $vendedor) : ?>
+                <option 
+                    <?php echo $propiedad->vendedorId === $vendedor->id ? 'selected' : ''; ?>
+                    value="<?php echo sntzr($vendedor->id); ?>">
+                    <?php echo sntzr($vendedor->nombre) ." ". sntzr($vendedor->apellido); ?>
+                </option>
+            <?php endforeach ?>
+            
         </select>
     </div>
 </fieldset>

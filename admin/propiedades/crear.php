@@ -3,6 +3,7 @@
     require '../../includes/app.php';
 
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as Image;
 
     autenticado();
@@ -10,33 +11,30 @@
     //instanciar la clase Propiedad para tener en memoria el modelo del objeto
     $propiedad = new Propiedad;
 
-    //Importar la conexión
-    $db = conectaDB();
-
-    //Realizar el query
-    $query = "SELECT * FROM vendedores";
-
-    //Obtener los resultados
-    $resultado = mysqli_query($db, $query);
-
+    //obtener todos los registros de vendedores
+    $vendedores = Vendedor::all();
+    
     $errores = Propiedad::getErrores();
     
     if($_SERVER["REQUEST_METHOD"] == 'POST') {
-
+        
         //instanciar la clase
         $propiedad = new Propiedad($_POST);
-
+        
         /**ARCHIVOS */
-
+        
         //Asignar archivo a la variable
         $imagen = $_FILES['imagen']['name'];        
-
-        //generar nombre unico
-        $nombreImg = uniqid(rand()) . $imagen;
-
-        //pasar el nombre de la imagen hacia la clase (modelo)
-        $propiedad->setImagen($nombreImg);
         
+        if($imagen) {
+            //generar nombre unico
+            $nombreImg = uniqid(rand()) . $imagen;
+            
+            //pasar el nombre de la imagen hacia la clase (modelo)
+            $propiedad->setImagen($nombreImg);
+        }
+        
+        // debuguear($propiedad);
         //validacion
         $errores = $propiedad->validar();
         
@@ -72,7 +70,7 @@
         </div>
         <?php endforeach; ?>
 
-        <a href="../index.php" class="boton boton-verde">Regresar</a>
+        <a href="../index.php" class="boton boton-verde">&lt;&lt;Regresar</a>
 
         <form class="formulario" method="POST" action="/admin/propiedades/crear.php" enctype="multipart/form-data">
         <!--enctype="multipart/form-data" atributo que permite leer archivos, info visible desde superglobal $_FILES-->

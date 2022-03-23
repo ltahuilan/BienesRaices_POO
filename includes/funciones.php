@@ -26,3 +26,31 @@ function sntzr($html) : string {
     $string = htmlspecialchars($html);
     return $string;
 }
+
+//valida el tipo de entidad 
+function validarTipo($tipo) {
+    $tipos = ['vendedor', 'propiedad'];
+    return in_array($tipo, $tipos);
+}
+
+
+//mostrar alertas
+function mostrarAlerta($codigo) {
+    $mensaje = '';
+
+    switch($codigo) {
+        case 1 :
+            $mensaje = 'Registro creado con éxito';
+            break;
+        case 2 :
+            $mensaje = 'Registro actualizado correctamente';
+            break;
+        case 3 :
+            $mensaje = 'Registro eliminado correctamente';
+            break;
+        default:
+            $mensaje = NULL;
+    }
+
+    return $mensaje;
+}

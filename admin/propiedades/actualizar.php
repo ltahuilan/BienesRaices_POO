@@ -2,6 +2,7 @@
     require '../../includes/app.php';
     
     use App\Propiedad;
+    use App\Vendedor;
     use Intervention\Image\ImageManagerStatic as Image;
 
     autenticado();
@@ -15,9 +16,8 @@
     }
 
     //consulta para obtener los registros de propiedades    
-    $resultado = Propiedad::find($id, 'propiedades');
-
-    $propiedad = $resultado;
+    $propiedad = Propiedad::find($id);
+    $vendedores = Vendedor::all();
 
     $errores = Propiedad::getErrores();
     
@@ -35,7 +35,7 @@
         //generar nombre unico
         $nombreImg = uniqid(rand()) . $imagen;
 
-        //Si exite un archivo en la super globla
+        //Si exite un archivo en la super globlal
         if ($_FILES['imagen']['name']){
             //setear la imagen
             $image = Image::make($_FILES['imagen']['tmp_name'])->fit(800, 600);
@@ -47,9 +47,11 @@
         if(empty($errores)) {
 
             $propiedad->guardar();
-                            
-            //subir archivo
-            $image->save( DIR_IMAGENES . $nombreImg);
+            
+            if($_FILES['imagen']['tmp_name']) {
+                //subir archivo
+                $image->save( DIR_IMAGENES . $nombreImg);
+            }
         }
     }
 
@@ -68,7 +70,7 @@
         </div>
         <?php endforeach; ?>
 
-        <a href="../index.php" class="boton boton-verde">Regresar</a>
+        <a href="../index.php" class="boton boton-verde">&lt;&lt;Regresar</a>
 
         <form class="formulario" method="POST" enctype="multipart/form-data">
         <!--enctype="multipart/form-data" atributo que permite leer archivos, info visible desde superglobal $_FILES-->
